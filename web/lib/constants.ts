@@ -2,9 +2,9 @@
 // Nota: evitare l'uso diretto di Prisma enums a runtime nei Server Components
 
 export const PAGINATION = {
-  DEFAULT_PAGE_SIZE: 10,
-  MAX_PAGE_SIZE: 100,
-  MIN_PAGE_SIZE: 1,
+  DEFAULT_PAGE_SIZE: 10 as number,
+  MAX_PAGE_SIZE: 100 as number,
+  MIN_PAGE_SIZE: 1 as number,
 } as const;
 
 // Stati prenotazione disponibili
