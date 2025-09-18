@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf7f2; /* warm off-white */
+  --foreground: #1b1b1b; /* near-black for good contrast */
+  --accent: #7c3aed; /* purple */
+  --accent-2: #db2777; /* rose */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b0b12;
+    --foreground: #ededed;
+    --accent: #a78bfa;
+    --accent-2: #fb7185;
+  }
+}
+
+/* Subtle site-wide background */
+body {
+  background:
+    radial-gradient(1000px 600px at 10% -10%, color-mix(in oklab, var(--accent) 12%, transparent), transparent),
+    radial-gradient(800px 500px at 90% -10%, color-mix(in oklab, var(--accent-2) 12%, transparent), transparent),
+    linear-gradient(180deg, color-mix(in oklab, var(--background) 90%, #ffffff 10%), var(--background));
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Utility: glass panel */
+.glass {
+  background: color-mix(in oklab, #ffffff 60%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+/* Utility: nicer shadow */
+.shadow-soft {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+}
+
+/* Small shake animation for invalid login */
+@keyframes shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.45s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Premium UI utilities */
+.card {
+  border-radius: 16px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+  background: color-mix(in oklab, #ffffff 65%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+}
+
+.input {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
+  padding: 10px 12px;
+  background: color-mix(in oklab, #ffffff 80%, transparent);
+  transition: box-shadow .2s ease, border-color .2s ease, background-color .2s ease;
+}
+.input:focus {
+  outline: none;
+  border-color: color-mix(in oklab, var(--accent) 35%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 16%, transparent);
+}
+
+.label {
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+  transition: transform .08s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease, opacity .2s ease;
+  will-change: transform;
+  user-select: none;
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .5; pointer-events: none; }
+
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 92%, #000 8%), color-mix(in oklab, var(--accent-2) 85%, #000 15%));
+  border-color: transparent;
+  box-shadow: 0 10px 20px color-mix(in oklab, var(--accent) 25%, transparent);
+}
+.btn-primary:hover { opacity: .95; }
+.btn-primary:focus { box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 18%, transparent); }
+
+.btn-secondary {
+  background: color-mix(in oklab, #ffffff 70%, transparent);
+  color: var(--foreground);
+}
+.btn-secondary:hover { background: color-mix(in oklab, #ffffff 85%, transparent); }
+
+.btn-ghost {
+  background: transparent;
+  border-color: color-mix(in oklab, var(--foreground) 12%, transparent);
+}
+.btn-ghost:hover { background: color-mix(in oklab, var(--foreground) 6%, transparent); }
+
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.75rem; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  border-radius: 9999px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: .015em;
+  border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+}
+.badge svg { width: 0.9em; height: 0.9em; }
+.badge--brand { background: color-mix(in oklab, var(--accent) 20%, white 0%); color: #5a2c12; border-color: color-mix(in oklab, var(--accent) 32%, transparent); }
+.badge--success { background: color-mix(in oklab, #22c55e 20%, transparent); color: #0a4b38; border-color: color-mix(in oklab, #22c55e 32%, transparent); }
+.badge--danger { background: color-mix(in oklab, #ef4444 20%, transparent); color: #7f1d1d; border-color: color-mix(in oklab, #ef4444 32%, transparent); }
+.badge--warning { background: color-mix(in oklab, #f59e0b 20%, transparent); color: #713f12; border-color: color-mix(in oklab, #f59e0b 32%, transparent); }
+
+.muted { color: color-mix(in oklab, var(--foreground) 60%, transparent); }
+
+/* Animations */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-slide { animation: fadeSlideIn .28s ease-out both; }
+
+/* Progress Bar */
+.progress { position: relative; height: 8px; background: color-mix(in srgb, var(--muted) 60%, transparent); border-radius: 999px; overflow: hidden; }
+.progress__bar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); width: 0; transition: width .25s ease; }
+
+/* --- Glow buttons utilities --- */
+.btn-glow {
+  padding: 0.625rem 1.25rem; /* ~py-2.5 px-5 */
+  color: #0F1B2A;
+  background: transparent;
+  border-color: color-mix(in oklab, #0F1B2A 60%, transparent);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.btn-glow:hover {
+  background: #0F1B2A;
+  color: #ffffff;
+  border-color: #0F1B2A;
+  box-shadow: 0 10px 25px rgba(15,27,42,0.16), 0 4px 10px rgba(15,27,42,0.12);
+}
+.btn-glow:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(15,27,42,0.2), 0 10px 25px rgba(15,27,42,0.16), 0 4px 10px rgba(15,27,42,0.12);
+}
+
+/* Variante per sfondi scuri/immagini (testo bianco) */
+.btn-glow-invert {
+  padding: 0.625rem 1.25rem; /* ~py-2.5 px-5 */
+  color: #ffffff;
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.70);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.btn-glow-invert:hover {
+  background: rgba(255,255,255,0.92);
+  color: #0F1B2A;
+  border-color: #ffffff;
+  box-shadow: 0 10px 25px rgba(255,255,255,0.28), 0 4px 10px rgba(0,0,0,0.10);
+}
+.btn-glow-invert:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.40), 0 10px 25px rgba(255,255,255,0.28), 0 4px 10px rgba(0,0,0,0.10);
+}
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.75rem; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  border-radius: 9999px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: .015em;
+  border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+}
+.badge svg { width: 0.9em; height: 0.9em; }
+.badge--brand { background: color-mix(in oklab, var(--accent) 20%, white 0%); color: #5a2c12; border-color: color-mix(in oklab, var(--accent) 32%, transparent); }
+.badge--success { background: color-mix(in oklab, #22c55e 20%, transparent); color: #0a4b38; border-color: color-mix(in oklab, #22c55e 32%, transparent); }
+.badge--danger { background: color-mix(in oklab, #ef4444 20%, transparent); color: #7f1d1d; border-color: color-mix(in oklab, #ef4444 32%, transparent); }
+.badge--warning { background: color-mix(in oklab, #f59e0b 20%, transparent); color: #713f12; border-color: color-mix(in oklab, #f59e0b 32%, transparent); }
+
+.muted { color: color-mix(in oklab, var(--foreground) 60%, transparent); }
+
+/* Animations */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-slide { animation: fadeSlideIn .28s ease-out both; }
+
+/* Progress Bar */
+.progress { position: relative; height: 8px; background: color-mix(in srgb, var(--muted) 60%, transparent); border-radius: 999px; overflow: hidden; }
+.progress__bar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); width: 0; transition: width .25s ease; }

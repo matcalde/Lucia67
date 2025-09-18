@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+}
+
+model Booking {
+  id            String   @id @default(cuid())
+  date          DateTime
+  guests        Int
+  name          String
+  email         String
+  phone         String
+  allergies     String?
+  preferences   String?
+  notes         String?
+  status        BookingStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Collegamento opzionale a un evento speciale (Announcement)
+  specialEventId String?
+  specialEvent   Announcement? @relation(fields: [specialEventId], references: [id], onDelete: SetNull)
+
+  @@index([date])
+  @@index([status])
+  @@index([createdAt])
+  @@index([status, date])
+  @@index([specialEventId])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum GalleryCategory {
+  HERO
+  GENERIC
+  FOOD
+  DRINKS
+  AMBIENCE
+  EVENTS
+  PEOPLE
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  url         String
+  alt         String
+  title       String?
+  description String?
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  category    GalleryCategory @default(GENERIC)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, order, createdAt])
+}
+
+model Announcement {
+  id         String   @id @default(cuid())
+  title      String
+  content    String
+  isActive   Boolean  @default(true)
+  eventDate  DateTime? // Data dell'evento (opzionale)
+  imageUrl   String?   // Immagine rappresentativa opzionale
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Prenotazioni collegate a questo evento
+  bookings   Booking[]
+}
+
+// Nuovo modello per le recensioni degli ospiti
+model Review {
+  id        String   @id @default(cuid())
+  name      String
+  rating    Int      // 1..5
+  comment   String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([rating])
+  @@index([approved, createdAt])
+}
+
+// Gestionale Menu: sezioni e piatti
+model MenuSection {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  items       MenuItem[]
+
+  @@index([isActive, order, createdAt])
+}
+
+model MenuItem {
+  id          String   @id @default(cuid())
+  sectionId   String
+  name        String
+  note        String?
+  price       String?  // opzionale e flessibile per formati vari (evita problemi di decimal su SQLite)
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  section     MenuSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@index([sectionId])
+  @@index([isActive, featured, order, createdAt])
+}
