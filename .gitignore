@@ -1,0 +1,32 @@
+# Root .gitignore for the repository
+
+# Node modules
+node_modules/
+web/node_modules/
+
+# Environment files (ignore in all directories)
+.env*
+**/.env*
+
+# Build outputs
+.next/
+web/.next/
+dist/
+build/
+out/
+
+# Vercel
+.vercel/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# TypeScript
+*.tsbuildinfo
+
+# macOS
+.DS_Store

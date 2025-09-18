@@ -1,0 +1,16 @@
+{
+  "name": "workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix web",
+    "build": "npm run build --prefix web",
+    "start": "npm run start --prefix web",
+    "lint": "npm run lint --prefix web",
+    "test": "npm test --prefix web",
+    "test:watch": "npm run test:watch --prefix web",
+    "test:coverage": "npm run test:coverage --prefix web",
+    "prisma:migrate": "npm exec --prefix web prisma migrate dev",
+    "prisma:generate": "npm exec --prefix web prisma generate",
+    "prisma:push": "npm exec --prefix web prisma db push"
+  }
+}
