@@ -30,3 +30,9 @@ pnpm-debug.log*
 
 # macOS
 .DS_Store
+
+# Databases
+*.db
+*.sqlite
+*.sqlite-journal
+web/prisma/dev.db
