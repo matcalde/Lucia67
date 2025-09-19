@@ -14,6 +14,8 @@ type Booking = {
   guests: number;
   status: "PENDING" | "CONFIRMED" | "CANCELLED";
   notes?: string;
+  allergies?: string;
+  preferences?: string;
 };
 
 export default function AdminBookingsPage() {
@@ -172,7 +174,9 @@ export default function AdminBookingsPage() {
                   <button disabled={actionLoading} onClick={() => remove(b.id)} className="btn btn-ghost btn-sm text-red-600">Elimina</button>
                 </div>
               </div>
-              {b.notes && <div className="mt-2 text-sm">Note: {b.notes}</div>}
+              {b.allergies && <div className="mt-2 text-sm">Allergie/Intolleranze: {b.allergies}</div>}
+              {b.preferences && <div className="mt-1 text-sm">Preferenze/Richieste: {b.preferences}</div>}
+              {b.notes && <div className="mt-1 text-sm">Note: {b.notes}</div>}
             </div>
           ))}
         </div>

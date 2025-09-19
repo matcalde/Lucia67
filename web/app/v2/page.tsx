@@ -52,11 +52,11 @@ export default async function HomeV2() {
   // Immagini
   const dbImages = await prisma.galleryImage.findMany({ where: { isActive: true }, orderBy: [{ order: "asc" }, { createdAt: "desc" }], take: 24 });
   const heroImg = await prisma.galleryImage.findFirst({ where: { isActive: true, category: "HERO" as any }, orderBy: [{ order: "asc" }, { createdAt: "desc" }] });
-  const heroSrc = heroImg?.url && heroImg.url !== "/uploads/hero.jpg" ? heroImg.url : "/hero.svg";
+  const heroSrc = heroImg?.url && !heroImg.url.startsWith("/uploads/") ? heroImg.url : "/hero.svg";
   const eventsPromoImg = await prisma.galleryImage.findFirst({ where: { isActive: true, category: "EVENTS" as any }, orderBy: [{ order: "asc" }, { createdAt: "desc" }] });
-  const eventsPromoSrc = eventsPromoImg?.url && eventsPromoImg.url !== "/uploads/hero.jpg" ? eventsPromoImg.url : heroSrc;
+  const eventsPromoSrc = eventsPromoImg?.url && !eventsPromoImg.url.startsWith("/uploads/") ? eventsPromoImg.url : heroSrc;
   const galleryImages = dbImages.map((img) => {
-    const safeUrl = !img.url || img.url === "/uploads/hero.jpg" ? "/hero.svg" : img.url;
+    const safeUrl = img.url && !img.url.startsWith("/uploads/") ? img.url : "/hero.svg";
     return { src: safeUrl, alt: img.alt, category: img.category as any };
   });
 
@@ -314,9 +314,9 @@ export default async function HomeV2() {
               const raw = (a as any).eventDate ?? (a as any).createdAt;
               const date = new Date(raw as any);
               const dateStr = date.toLocaleDateString("it-IT", { day: "2-digit", month: "long", year: "numeric" });
-              const imgSrc = (a as any).imageUrl
-                ? `/api/image-proxy?src=${encodeURIComponent(resolveImageUrl((a as any).imageUrl) as string)}`
-                : "/hero.svg";
+              const resolved = (a as any).imageUrl ? resolveImageUrl((a as any).imageUrl) : null;
+              const isHttp = resolved && (resolved.startsWith("http://") || resolved.startsWith("https://"));
+              const imgSrc = isHttp ? `/api/image-proxy?src=${encodeURIComponent(resolved as string)}` : "/hero.svg";
               return (
                 <article key={(a as any).id} className="rounded-2xl bg-white border p-5 shadow-soft transform-gpu transition-transform duration-200 ease-out motion-safe:hover:-translate-y-1 motion-safe:focus-within:-translate-y-1 hover:shadow-md">
                   {(a as any).imageUrl && (

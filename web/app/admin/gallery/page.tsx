@@ -21,6 +21,8 @@ export default function AdminGalleryPage() {
   // Toast
   const [toast, setToast] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
+  // Env/config status (from API)
+  const [config, setConfig] = useState<{ supabaseConfigured: boolean; environment: { isProduction: boolean; nodeEnv: string; vercel: boolean } } | null>(null);
 
   const fileInfo = useMemo(() => {
     if (!file) return null;
@@ -41,12 +43,15 @@ export default function AdminGalleryPage() {
       sp.set("page", String(page));
       sp.set("take", String(pagination.take));
       if (filterCategory !== "ALL") sp.set("category", filterCategory);
+      // ask API to include config status for Admin banners/UI hints
+      sp.set("config", "1");
 
       const res = await fetch(`/api/admin/gallery?${sp.toString()}`);
       const json = await res.json();
       if (json.ok) {
         setImages(json.data.items || []);
         setPagination({ page: json.data.page, total: json.data.total, take: json.data.take });
+        if (json.data.config) setConfig(json.data.config);
       } else {
         alert(json.error || "Errore nel caricamento");
       }
@@ -201,7 +206,6 @@ export default function AdminGalleryPage() {
       });
       const json = await res.json();
       if (!json.ok) throw new Error(json.error || "Upload fallito");
-      setForm({ url: "", alt: "", title: "", description: "", order: 0, category: "GENERIC" });
       setFile(null);
       await load(1);
       pushToast("Immagine caricata");
@@ -277,8 +281,17 @@ export default function AdminGalleryPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 items-end">
         <div>
           <label className="label block">Carica file</label>
+          {config?.environment?.isProduction && !config?.supabaseConfigured && (
+            <div className="mt-1 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded p-2">
+              In produzione l'upload locale è disabilitato su Vercel. Configura Supabase per abilitare il caricamento file, oppure usa "Aggiungi da URL".
+            </div>
+          )}
           <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="input w-full" />
-          <p className="text-xs text-black/60 mt-1">Formati supportati: immagini. Il file verrà salvato in /public/uploads.</p>
+          <p className="text-xs text-black/60 mt-1">
+            {config?.environment?.isProduction
+              ? "In produzione: i file vengono caricati su Supabase Storage."
+              : "In sviluppo: il file verrà salvato in /public/uploads."}
+          </p>
           {file && (
             <div className="mt-3 flex items-center gap-3">
               {previewUrl && <img src={previewUrl} alt="preview" className="w-24 h-24 object-cover rounded border" />}
@@ -290,7 +303,7 @@ export default function AdminGalleryPage() {
           )}
         </div>
         <div className="flex items-end">
-          <button onClick={createViaFile} disabled={loading || !file} className="btn btn-glow btn-sm">Carica</button>
+          <button onClick={createViaFile} disabled={loading || !file || (config?.environment?.isProduction && !config?.supabaseConfigured)} className="btn btn-glow btn-sm">Carica</button>
         </div>
       </div>
 

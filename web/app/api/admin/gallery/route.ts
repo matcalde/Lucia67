@@ -18,6 +18,8 @@ const QuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   take: z.coerce.number().int().min(PAGINATION.MIN_PAGE_SIZE).max(PAGINATION.MAX_PAGE_SIZE).default(PAGINATION.DEFAULT_PAGE_SIZE),
   category: z.enum([...GALLERY_CATEGORY_VALUES] as [typeof GALLERY_CATEGORY_VALUES[number], ...typeof GALLERY_CATEGORY_VALUES[number][]]).optional(),
+  // expose config status when requested
+  config: z.coerce.boolean().optional(),
 });
 
 export async function GET(req: NextRequest) {
@@ -25,7 +27,8 @@ export async function GET(req: NextRequest) {
   const parse = QuerySchema.safeParse({
     page: searchParams.get("page"),
     take: searchParams.get("take"),
-    category: searchParams.get("category") || undefined,
+    category: (searchParams.get("category") || undefined) as any,
+    config: searchParams.get("config") ?? undefined,
   });
 
   if (!parse.success) {
@@ -40,6 +43,20 @@ export async function GET(req: NextRequest) {
     prisma.galleryImage.findMany({ where, orderBy: [{ order: "asc" }, { id: "asc" }], skip, take }),
     prisma.galleryImage.count({ where }),
   ]);
+
+  // Optionally include env/config status for Admin UI banners
+  if (parse.data.config) {
+    const supa = getSupabase();
+    const config = {
+      supabaseConfigured: !!supa,
+      environment: {
+        isProduction: process.env.NODE_ENV === "production" || !!process.env.VERCEL,
+        nodeEnv: process.env.NODE_ENV || "development",
+        vercel: !!process.env.VERCEL,
+      },
+    };
+    return apiSuccess({ items, total, page, take, config });
+  }
 
   return apiSuccess({ items, total, page, take });
 }
@@ -96,8 +113,16 @@ export async function POST(req: Request) {
         return apiCreated({ item });
       }
 
-      // Fallback: save locally to /public/uploads
-      // Ensure uploads directory exists
+      // In produzione non permettere fallback locale per evitare file effimeri su Vercel
+      if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
+        return apiError(
+          "Upload file disabilitato in produzione: configura SUPABASE_URL, SUPABASE_SERVICE_ROLE (o ANON) e SUPABASE_STORAGE_BUCKET",
+          undefined,
+          503
+        );
+      }
+
+      // Fallback: save locally to /public/uploads (solo in sviluppo)
       const uploadsDir = path.join(process.cwd(), "public", "uploads");
       await fs.mkdir(uploadsDir, { recursive: true });
 
@@ -119,7 +144,7 @@ export async function POST(req: Request) {
     }
   }
 
-  // Fallback: JSON payload with URL
+  // Fallback: JSON payload con URL esterno (sempre permesso)
   const body = await req.json();
   const parsed = await GalleryImageCreateSchema.safeParseAsync(body);
   if (!parsed.success) {

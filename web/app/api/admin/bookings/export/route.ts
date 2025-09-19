@@ -30,6 +30,8 @@ export async function GET(req: NextRequest) {
     "Email",
     "Ospiti",
     "Stato",
+    "Allergie/Intolleranze",
+    "Preferenze/Richieste",
     "Note"
   ];
 
@@ -55,6 +57,8 @@ export async function GET(req: NextRequest) {
       b.email || "",
       String(b.guests),
       b.status,
+      b.allergies || "",
+      b.preferences || "",
       b.notes || "",
     ].map(escapeCell).join(";"));
   }
