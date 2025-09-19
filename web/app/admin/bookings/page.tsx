@@ -85,10 +85,8 @@ export default function AdminBookingsPage() {
     if (!confirm("Eliminare questa prenotazione?")) return;
     setActionLoading(true);
     try {
-      const res = await fetch("/api/admin/bookings", {
+      const res = await fetch(`/api/admin/bookings?id=${encodeURIComponent(id)}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
       });
       const json = await res.json();
       if (!json.ok) throw new Error(json.error || "Eliminazione fallita");

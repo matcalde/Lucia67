@@ -21,6 +21,9 @@ export const BookingStatusUpdateSchema = z.object({
   status: z.enum(BOOKING_STATUS_VALUES as ["PENDING","CONFIRMED","CANCELLED"]),
 });
 
+// NEW: booking delete schema
+export const BookingDeleteSchema = z.object({ id: z.string().min(1, "ID richiesto") });
+
 // Announcement schemas
 export const AnnouncementCreateSchema = z.object({
   title: z.string().min(3, "Titolo troppo corto").max(200, "Titolo troppo lungo"),
@@ -143,6 +146,7 @@ export const MenuItemDeleteSchema = z.object({ id: z.string().min(1, "ID richies
 // Inferred types for TypeScript
 export type BookingCreate = z.infer<typeof BookingCreateSchema>;
 export type BookingStatusUpdate = z.infer<typeof BookingStatusUpdateSchema>;
+export type BookingDelete = z.infer<typeof BookingDeleteSchema>;
 export type AnnouncementCreate = z.infer<typeof AnnouncementCreateSchema>;
 export type AnnouncementUpdate = z.infer<typeof AnnouncementUpdateSchema>;
 export type AnnouncementDelete = z.infer<typeof AnnouncementDeleteSchema>;
