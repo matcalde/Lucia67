@@ -14,7 +14,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (max-width: 0px) {
   :root {
     --background: #0b0b12;
     --foreground: #ededed;
@@ -87,7 +87,7 @@ body {
 }
 
 /* Better contrast for inputs in dark mode */
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (max-width: 0px) {
   .input {
     background: rgba(255,255,255,0.10);
     border-color: rgba(255,255,255,0.35);
