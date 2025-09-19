@@ -8,6 +8,7 @@ import { GalleryImageCreateSchema, GalleryImageUpdateSchema, GalleryImageDeleteS
 import fs from "fs/promises";
 import path from "path";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { revalidateTags, getRevalidateTagsForAction } from "@/lib/revalidate";
 
 export const runtime = "nodejs";
 
@@ -110,6 +111,8 @@ export async function POST(req: Request) {
         const item = await prisma.galleryImage.create({
           data: { url, alt, title, description, order: Number.isFinite(order) ? order : 0, isActive, category },
         });
+        // Revalidate caches for gallery create
+        await revalidateTags(getRevalidateTagsForAction("create", "gallery"));
         return apiCreated({ item });
       }
 
@@ -138,6 +141,8 @@ export async function POST(req: Request) {
       const item = await prisma.galleryImage.create({
         data: { url, alt, title, description, order: Number.isFinite(order) ? order : 0, isActive, category },
       });
+      // Revalidate caches for gallery create
+      await revalidateTags(getRevalidateTagsForAction("create", "gallery"));
       return apiCreated({ item });
     } catch (e: any) {
       return apiError(e?.message || "Upload fallito", undefined, 400);
@@ -152,6 +157,8 @@ export async function POST(req: Request) {
   }
 
   const item = await prisma.galleryImage.create({ data: parsed.data });
+  // Revalidate caches for gallery create
+  await revalidateTags(getRevalidateTagsForAction("create", "gallery"));
   return apiCreated({ item });
 }
 
@@ -166,6 +173,8 @@ export async function PATCH(req: Request) {
 
   const { id, data } = parsed.data;
   const item = await prisma.galleryImage.update({ where: { id }, data });
+  // Revalidate caches for gallery update
+  await revalidateTags(getRevalidateTagsForAction("update", "gallery"));
   return apiSuccess({ item });
 }
 
@@ -213,6 +222,8 @@ export async function DELETE(req: Request) {
   }
 
   await prisma.galleryImage.delete({ where: { id } });
+  // Revalidate caches for gallery delete
+  await revalidateTags(getRevalidateTagsForAction("delete", "gallery"));
   return apiOk();
 }
 
