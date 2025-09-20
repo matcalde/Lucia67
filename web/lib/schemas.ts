@@ -21,6 +21,12 @@ export const BookingStatusUpdateSchema = z.object({
   status: z.enum(BOOKING_STATUS_VALUES as ["PENDING","CONFIRMED","CANCELLED"]),
 });
 
+// NEW: update booking date schema
+export const BookingDateUpdateSchema = z.object({
+  id: z.string().min(1, "ID richiesto"),
+  date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Data non valida" }),
+});
+
 // NEW: booking delete schema
 export const BookingDeleteSchema = z.object({ id: z.string().min(1, "ID richiesto") });
 
@@ -146,6 +152,7 @@ export const MenuItemDeleteSchema = z.object({ id: z.string().min(1, "ID richies
 // Inferred types for TypeScript
 export type BookingCreate = z.infer<typeof BookingCreateSchema>;
 export type BookingStatusUpdate = z.infer<typeof BookingStatusUpdateSchema>;
+export type BookingDateUpdate = z.infer<typeof BookingDateUpdateSchema>;
 export type BookingDelete = z.infer<typeof BookingDeleteSchema>;
 export type AnnouncementCreate = z.infer<typeof AnnouncementCreateSchema>;
 export type AnnouncementUpdate = z.infer<typeof AnnouncementUpdateSchema>;

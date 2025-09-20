@@ -128,3 +128,14 @@ model MenuItem {
   @@index([sectionId])
   @@index([isActive, featured, order, createdAt])
 }
+
+// NEW: giorni disabilitati per prenotazioni
+model DisabledDay {
+  id        String   @id @default(cuid())
+  day       DateTime
+  reason    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([day])
+}

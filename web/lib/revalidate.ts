@@ -23,11 +23,15 @@ export const REVALIDATE_TAGS = {
   ADMIN_BOOKINGS: "admin-bookings",
   ADMIN_GALLERY: "admin-gallery",
   ADMIN_ANNOUNCEMENTS: "admin-announcements",
+  ADMIN_DISABLED_DAYS: "admin-disabled-days",
 
   // Reviews
   REVIEWS: "reviews",
   REVIEW_LIST: "review-list",
   ADMIN_REVIEWS: "admin-reviews",
+
+  // Calendar / Disabled Days
+  DISABLED_DAYS: "disabled-days",
 } as const;
 
 export type RevalidateTag = typeof REVALIDATE_TAGS[keyof typeof REVALIDATE_TAGS];
@@ -68,7 +72,7 @@ export async function revalidateTags(tags: RevalidateTag[]): Promise<void> {
  */
 export function getRevalidateTagsForAction(
   action: "create" | "update" | "delete",
-  resource: "gallery" | "announcement" | "booking" | "review"
+  resource: "gallery" | "announcement" | "booking" | "review" | "disabled_day"
 ): RevalidateTag[] {
   const tags: RevalidateTag[] = [];
 
@@ -94,11 +98,15 @@ export function getRevalidateTagsForAction(
       break;
 
     case "booking":
-      tags.push(REVALIDATE_TAGS.ADMIN_BOOKINGS);
+      tags.push(REVALIDATE_TAGS.ADMIN_BOOKINGS, REVALIDATE_TAGS.DISABLED_DAYS);
       break;
 
     case "review":
       tags.push(REVALIDATE_TAGS.REVIEWS, REVALIDATE_TAGS.REVIEW_LIST, REVALIDATE_TAGS.ADMIN_REVIEWS);
+      break;
+
+    case "disabled_day":
+      tags.push(REVALIDATE_TAGS.ADMIN_DISABLED_DAYS, REVALIDATE_TAGS.DISABLED_DAYS, REVALIDATE_TAGS.ADMIN_BOOKINGS);
       break;
   }
 

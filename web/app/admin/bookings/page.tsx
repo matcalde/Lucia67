@@ -18,6 +18,8 @@ type Booking = {
   preferences?: string;
 };
 
+type DisabledDay = { id: string; day: string; reason?: string | null };
+
 export default function AdminBookingsPage() {
   const [items, setItems] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
@@ -28,8 +30,15 @@ export default function AdminBookingsPage() {
   const [toast, setToast] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
 
+  // Disabled days admin state
+  const [disabledDays, setDisabledDays] = useState<DisabledDay[]>([]);
+  const [ddLoading, setDdLoading] = useState(false);
+  const [newDisabledDate, setNewDisabledDate] = useState("");
+  const [newDisabledReason, setNewDisabledReason] = useState("");
+
   useEffect(() => {
     load();
+    loadDisabledDays();
   }, []);
 
   const pushToast = (msg: string) => {
@@ -61,6 +70,17 @@ export default function AdminBookingsPage() {
     }
   };
 
+  const loadDisabledDays = async () => {
+    setDdLoading(true);
+    try {
+      const res = await fetch("/api/admin/disabled-days");
+      const json = await res.json();
+      if (json.ok) setDisabledDays(json.data.items);
+    } finally {
+      setDdLoading(false);
+    }
+  };
+
   const updateStatus = async (id: string, status: Booking["status"]) => {
     setActionLoading(true);
     try {
@@ -74,6 +94,25 @@ export default function AdminBookingsPage() {
       await load(pagination.page);
       const msg = status === "CONFIRMED" ? "confermata" : status === "CANCELLED" ? "annullata" : "aggiornata";
       pushToast(`Prenotazione ${msg}`);
+    } catch (e: any) {
+      alert(e.message || "Errore di rete");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const updateDate = async (id: string, dateISO: string) => {
+    setActionLoading(true);
+    try {
+      const res = await fetch("/api/admin/bookings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, date: dateISO }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || "Aggiornamento data fallito");
+      await load(pagination.page);
+      pushToast("Data prenotazione aggiornata");
     } catch (e: any) {
       alert(e.message || "Errore di rete");
     } finally {
@@ -96,6 +135,48 @@ export default function AdminBookingsPage() {
       alert(e.message || "Errore di rete");
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  const addDisabledDay = async () => {
+    if (!newDisabledDate) return alert("Seleziona una data");
+    setDdLoading(true);
+    try {
+      const res = await fetch("/api/admin/disabled-days", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ day: newDisabledDate, reason: newDisabledReason || undefined }),
+      });
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error || "Salvataggio fallito");
+      setNewDisabledDate("");
+      setNewDisabledReason("");
+      await loadDisabledDays();
+      pushToast("Giorno disabilitato aggiunto");
+    } catch (e: any) {
+      alert(e.message || "Errore di rete");
+    } finally {
+      setDdLoading(false);
+    }
+  };
+
+  const removeDisabledDay = async (id: string) => {
+    if (!confirm("Ripristinare la disponibilità per questo giorno?")) return;
+    setDdLoading(true);
+    try {
+      const res = await fetch("/api/admin/disabled-days", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error || "Eliminazione fallita");
+      await loadDisabledDays();
+      pushToast("Giorno disabilitato rimosso");
+    } catch (e: any) {
+      alert(e.message || "Errore di rete");
+    } finally {
+      setDdLoading(false);
     }
   };
 
@@ -143,6 +224,35 @@ export default function AdminBookingsPage() {
         </div>
       </div>
 
+      {/* Gestione giorni disabilitati */}
+      <div className="card p-4 mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-medium">Giorni disabilitati</h2>
+          <div className="flex items-center gap-2">
+            <input type="date" className="input" value={newDisabledDate} onChange={(e) => setNewDisabledDate(e.target.value)} />
+            <input type="text" className="input" placeholder="Motivo (opzionale)" value={newDisabledReason} onChange={(e) => setNewDisabledReason(e.target.value)} />
+            <button disabled={ddLoading} onClick={addDisabledDay} className="btn btn-ghost">Aggiungi</button>
+          </div>
+        </div>
+        {ddLoading && disabledDays.length === 0 ? (
+          <div className="text-sm text-black/60 dark:text-white/60">Caricamento...</div>
+        ) : disabledDays.length === 0 ? (
+          <div className="text-sm text-black/60 dark:text-white/60">Nessun giorno disabilitato</div>
+        ) : (
+          <ul className="divide-y">
+            {disabledDays.map((d) => (
+              <li key={d.id} className="py-2 flex items-center justify-between">
+                <div>
+                  <div className="font-medium">{format(new Date(d.day), "dd/MM/yyyy")}</div>
+                  {d.reason && <div className="text-sm text-black/60 dark:text-white/60">{d.reason}</div>}
+                </div>
+                <button disabled={ddLoading} onClick={() => removeDisabledDay(d.id)} className="btn btn-ghost btn-sm text-red-600">Rimuovi</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
       {loading && items.length === 0 ? (
         <div className="grid gap-3">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -171,6 +281,29 @@ export default function AdminBookingsPage() {
                   <button disabled={actionLoading} onClick={() => updateStatus(b.id, "CANCELLED")} className="btn btn-ghost btn-sm">Annulla</button>
                   <button disabled={actionLoading} onClick={() => remove(b.id)} className="btn btn-ghost btn-sm text-red-600">Elimina</button>
                 </div>
+              </div>
+              {/* Editor cambio data */}
+              <div className="mt-3 flex items-center gap-2">
+                <input
+                  type="date"
+                  className="input"
+                  defaultValue={new Date(b.date).toISOString().slice(0, 10)}
+                  onChange={(e) => {
+                    const day = e.target.value; // yyyy-MM-dd
+                    // Manteniamo l'orario corrente
+                    const current = new Date(b.date);
+                    const dateISO = `${day}T${String(current.getHours()).padStart(2, "0")}:${String(current.getMinutes()).padStart(2, "0")}:00`;
+                    (e.target as any)._nextIso = dateISO;
+                  }}
+                />
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={(e) => {
+                    const input = (e.currentTarget.previousSibling as HTMLInputElement) as any;
+                    const iso = input?._nextIso || new Date(b.date).toISOString();
+                    updateDate(b.id, iso);
+                  }}
+                >Modifica data</button>
               </div>
               {b.allergies && <div className="mt-2 text-sm">Allergie/Intolleranze: {b.allergies}</div>}
               {b.preferences && <div className="mt-1 text-sm">Preferenze/Richieste: {b.preferences}</div>}

@@ -3,14 +3,16 @@ import { prisma } from "@/lib/prisma";
 
 
 export async function getDisabledDates(): Promise<string[]> {
-  const bookings = await prisma.booking.findMany({
-    where: { status: { not: "CANCELLED" } },
-    select: { date: true },
-  });
-  // Una sola prenotazione per serata: disabilita il giorno se esiste qualsiasi prenotazione non cancellata
+  const [bookings, disabledDays] = await Promise.all([
+    prisma.booking.findMany({ where: { status: { not: "CANCELLED" } }, select: { date: true } }),
+    prisma.disabledDay.findMany({ select: { day: true } }),
+  ]);
   const set = new Set<string>();
   for (const b of bookings) {
     set.add(b.date.toISOString().slice(0, 10));
+  }
+  for (const d of disabledDays) {
+    set.add(new Date(d.day).toISOString().slice(0, 10));
   }
   return Array.from(set);
 }

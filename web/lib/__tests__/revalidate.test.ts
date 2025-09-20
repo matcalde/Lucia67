@@ -31,10 +31,13 @@ describe("Revalidate System", () => {
         ADMIN_BOOKINGS: "admin-bookings",
         ADMIN_GALLERY: "admin-gallery",
         ADMIN_ANNOUNCEMENTS: "admin-announcements",
+        ADMIN_DISABLED_DAYS: "admin-disabled-days",
         // New reviews related tags
         REVIEWS: "reviews",
         REVIEW_LIST: "review-list",
         ADMIN_REVIEWS: "admin-reviews",
+        // Calendar / Disabled days
+        DISABLED_DAYS: "disabled-days",
       });
     });
   });
