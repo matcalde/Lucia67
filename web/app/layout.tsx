@@ -42,7 +42,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         {/* Top nav with CTA and Admin link */}
-        <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/80 dark:bg-black/40 border-b">
+        <header className="sticky top-0 z-50 pointer-events-auto backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/80 dark:bg-black/40 border-b">
           <nav className="mx-auto max-w-6xl px-6 h-16 flex items-center gap-4 text-sm">
             <Link href="/v2" className="flex items-center gap-2 font-semibold tracking-wide">
               <img
