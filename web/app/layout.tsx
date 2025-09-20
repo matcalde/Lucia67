@@ -44,7 +44,7 @@ export default function RootLayout({
         {/* Top nav with CTA and Admin link */}
         <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/80 dark:bg-black/40 border-b">
           <nav className="mx-auto max-w-6xl px-6 h-16 flex items-center gap-4 text-sm">
-            <Link href="/" className="flex items-center gap-2 font-semibold tracking-wide">
+            <Link href="/v2" className="flex items-center gap-2 font-semibold tracking-wide">
               <img
                 src="/logo.png?v=3"
                 width={36}
@@ -59,7 +59,7 @@ export default function RootLayout({
             <Link href="#prenota" className="hover:underline">Prenota</Link>
             <Link href="#news" className="hover:underline">News</Link>
             <Link href="/reviews" className="hover:underline">Recensioni</Link>
-            <Link href="/" className="hover:underline">Home</Link>
+            <Link href="/v2" className="hover:underline">Home</Link>
 
             <div className="ml-auto flex items-center gap-3">
               <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener" aria-label="Instagram" className="opacity-80 hover:opacity-100 transition">

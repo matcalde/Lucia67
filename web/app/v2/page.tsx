@@ -106,10 +106,10 @@ export default async function HomeV2() {
     <div className="min-h-screen">
       {/* HERO rimosso: sostituito dalla sezione successiva con immagine di sfondo */}
       <section className="relative">
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 pointer-events-none">
           {/* Hero background image full-bleed */}
-          <div className="h-[55vh] sm:h-[65vh] w-full bg-center bg-cover" style={{ backgroundImage: `url(${heroSrc})` }} />
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="h-[55vh] sm:h-[65vh] w-full bg-center bg-cover pointer-events-none" style={{ backgroundImage: `url(${heroSrc})` }} />
+          <div className="absolute inset-0 bg-black/40 pointer-events-none" />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 h-[55vh] sm:h-[65vh] flex items-center">
           <div>
