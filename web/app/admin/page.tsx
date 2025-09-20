@@ -85,3 +85,6 @@ function KpiCard({ label, value, icon: Icon, color }: { label: string; value: nu
     </div>
   );
 }
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;

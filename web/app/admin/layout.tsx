@@ -6,8 +6,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="min-h-screen grid grid-rows-[auto_1fr]">
        <header className="border-b sticky top-0 z-50 pointer-events-auto bg-white/90 dark:bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-         -        <nav className="mx-auto max-w-6xl px-6 h-14 flex items-center gap-4 text-sm">
-         +        <nav className="mx-auto max-w-6xl px-6 h-14 flex items-center gap-4 text-sm whitespace-nowrap overflow-x-auto">
+        <nav className="mx-auto max-w-6xl px-6 h-14 flex items-center gap-4 text-sm whitespace-nowrap overflow-x-auto">
                   <Link href="/v2" className="font-medium">Home restaurant Lucia 67</Link>
                   {hasSession ? (
                     <>
