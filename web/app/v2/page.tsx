@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { FaStar, FaRegStar, FaStarHalfAlt, FaCalendarAlt, FaUserCircle, FaUtensils, FaMusic, FaHeart, FaImage } from "react-icons/fa";
 import ClientBooking from "./ClientBooking";
 import { CONTACT_INFO, LOCATION_INFO } from "@/lib/constants";
+import SmoothScroll from "./SmoothScroll";
 
 export const dynamic = "force-dynamic";
 
@@ -104,6 +105,7 @@ export default async function HomeV2() {
 
   return (
     <div className="min-h-screen">
+      <SmoothScroll />
       {/* HERO rimosso: sostituito dalla sezione successiva con immagine di sfondo */}
       <section className="relative">
         <div className="absolute inset-0 pointer-events-none">
@@ -243,7 +245,7 @@ export default async function HomeV2() {
       </section>
 
       {/* GALLERIA */}
-      <section id="galleria" className="mx-auto max-w-7xl px-6 py-16 sm:py-20">
+      <section id="galleria" className="scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-7xl px-6 py-16 sm:py-20">
         <div className="text-center">
           <div className="inline-flex items-center gap-1 badge badge--brand"><FaImage className="text-[#B7622C]" /> <span>Galleria</span></div>
           <h2 className="mt-3 text-2xl sm:text-3xl font-semibold text-[#0F1B2A]">Galleria</h2>
@@ -264,7 +266,7 @@ export default async function HomeV2() {
       )}
 
       {/* MENÙ COMPLETO PER SEZIONI */}
-      <section id="menu" className="mx-auto max-w-7xl px-6 py-16 sm:py-20">
+      <section id="menu" className="scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-7xl px-6 py-16 sm:py-20">
         <div className="text-center">
           <div className="inline-flex items-center gap-1 badge badge--brand"><FaUtensils className="text-[#B7622C]" /> <span>Il Menù</span></div>
           <h2 className="mt-3 text-2xl sm:text-3xl font-semibold text-[#0F1B2A]">Il Menù</h2>
@@ -298,7 +300,7 @@ export default async function HomeV2() {
       </section>
 
       {/* NEWS & EVENTI */}
-      <section id="news" className="mx-auto max-w-7xl px-6 py-16 sm:py-20">
+      <section id="news" className="scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-7xl px-6 py-16 sm:py-20">
         <div className="text-center">
           <div className="inline-flex items-center gap-1 badge badge--brand"><FaCalendarAlt className="text-[#B7622C]" /> <span>News & Eventi</span></div>
           <h2 className="mt-3 text-2xl sm:text-3xl font-semibold text-[#0F1B2A]">News & Eventi</h2>
@@ -365,7 +367,7 @@ export default async function HomeV2() {
       </section>
 
       {/* CTA PRENOTAZIONE */}
-      <section id="prenota" className="mx-auto max-w-3xl px-6 py-16 sm:py-20">
+      <section id="prenota" className="scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-3xl px-6 py-16 sm:py-20">
         <h2 className="text-2xl sm:text-3xl font-semibold mb-6">Prenota</h2>
         <div className="rounded-2xl border glass p-6 shadow-soft">
           <ClientBooking disabledDates={disabledDates} dateStatuses={dateStatuses} specialEvents={specialEvents} />

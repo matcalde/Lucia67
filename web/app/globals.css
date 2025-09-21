@@ -33,6 +33,27 @@ body {
     linear-gradient(180deg, color-mix(in oklab, var(--background) 90%, #ffffff 10%), var(--background));
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* Reserve gutter to avoid layout shift when scrollbars appear */
+  /* scrollbar-gutter: stable both-edges;  removed due to PostCSS parser issue */
+}
+
+/* Smooth scroll behavior will be applied dynamically on /v2 via the SmoothScroll client component */
+html { scroll-padding-top: 5rem; }
+@media (min-width: 640px) { html { scroll-padding-top: 6rem; } }
+
+/* Minimal horizontal scrollbar hiding for nav scroll zones */
+.scrollbar-none { scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* Edge fade (no overlay, pointer-safe) */
+.edge-fade-x {
+  /* Size of the fade on left/right */
+  --edge-fade: 16px;
+  /* Use mask so we don't cover content or intercept clicks */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--edge-fade), #000 calc(100% - var(--edge-fade)), transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 var(--edge-fade), #000 calc(100% - var(--edge-fade)), transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
 }
 
 /* Utility: glass panel */

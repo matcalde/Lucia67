@@ -43,31 +43,31 @@ export default function RootLayout({
       >
         {/* Top nav with CTA and Admin link */}
         <header className="sticky top-0 z-50 pointer-events-auto backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/80 dark:bg-black/40 border-b">
-          <nav className="mx-auto max-w-6xl px-6 h-16 flex items-center gap-4 text-sm whitespace-nowrap overflow-x-auto">
-            <Link href="/v2" className="flex items-center gap-2 font-semibold tracking-wide">
-              <img
-                src="/logo.png?v=3"
-                width={36}
-                height={36}
-                alt="Home restaurant Lucia 67"
-                className="h-9 w-9 rounded ring-1 ring-black/10 dark:ring-white/15"
-              />
-              <span className="text-base sm:text-lg">Home restaurant Lucia 67</span>
-            </Link>
+          <nav className="mx-auto max-w-6xl px-6 h-16 flex flex-nowrap items-center gap-4 text-sm overflow-x-auto scrollbar-none edge-fade-x">
+               <Link href="/v2" className="flex items-center gap-2 font-semibold tracking-wide shrink-0 whitespace-nowrap">
+                 <img
+                   src="/logo.png?v=3"
+                   width={36}
+                   height={36}
+                   alt="Home restaurant Lucia 67"
+                   className="h-9 w-9 rounded ring-1 ring-black/10 dark:ring-white/15"
+                 />
+                 <span className="whitespace-nowrap text-base sm:text-lg">Home restaurant Lucia 67</span>
+               </Link>
 
-            <Link href="#galleria" className="hover:underline">Galleria</Link>
-            <Link href="#prenota" className="hover:underline">Prenota</Link>
-            <Link href="#news" className="hover:underline">News</Link>
-            <Link href="/reviews" className="hover:underline">Recensioni</Link>
-            <Link href="/v2" className="hover:underline">Home</Link>
+               <Link href="/v2#galleria" className="hover:underline shrink-0 whitespace-nowrap">Galleria</Link>
+               <Link href="/v2#prenota" className="hover:underline shrink-0 whitespace-nowrap">Prenota</Link>
+               <Link href="/v2#news" className="hover:underline shrink-0 whitespace-nowrap">News</Link>
+               <Link href="/reviews" className="hover:underline shrink-0 whitespace-nowrap">Recensioni</Link>
+               <Link href="/v2" className="hover:underline shrink-0 whitespace-nowrap">Home</Link>
 
-            <div className="ml-auto flex items-center gap-3">
-              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener" aria-label="Instagram" className="opacity-80 hover:opacity-100 transition">
-                <img src="/instagram.svg" alt="Instagram" className="h-5 w-5" />
-              </a>
-              <Link href="/admin/login" className="rounded-full bg-[var(--accent)] text-white px-3 py-1.5 text-xs hover:opacity-95">Area Gestore</Link>
-            </div>
-          </nav>
+               <div className="ml-auto flex items-center gap-3 shrink-0">
+                 <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener" aria-label="Instagram" className="opacity-80 hover:opacity-100 transition">
+                   <img src="/instagram.svg" alt="Instagram" className="h-5 w-5" />
+                 </a>
+                 <Link href="/admin/login" className="rounded-full bg-[var(--accent)] text-white px-3 py-1.5 text-xs hover:opacity-95 whitespace-nowrap">Area Gestore</Link>
+               </div>
+             </nav>
         </header>
 
         <main>{children}</main>

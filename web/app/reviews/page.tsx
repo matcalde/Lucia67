@@ -66,6 +66,16 @@ export default function ReviewsPage() {
         const saved = localStorage.getItem("rv_last_review");
         if (saved) setPending(JSON.parse(saved));
       } catch {}
+      // leggi pagina/take dall'URL e carica la lista
+      try {
+        const sp = new URLSearchParams(window.location.search);
+        const p = Math.max(1, Number(sp.get("page") || 1));
+        const t = Math.max(1, Number(sp.get("take") || PAGINATION.DEFAULT_PAGE_SIZE));
+        setPagination(prev => ({ ...prev, page: p, take: t }));
+        fetchList(p);
+      } catch {
+        fetchList(1);
+      }
     }
   }, []);
 
@@ -81,6 +91,13 @@ export default function ReviewsPage() {
       const data = json.data as Paged<Review>;
       setItems(data.items);
       setPagination({ page: data.page, total: data.total, take: data.take });
+      // aggiorna URL per riflettere la pagina corrente (senza ricaricare)
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        url.searchParams.set("page", String(data.page));
+        url.searchParams.set("take", String(data.take));
+        window.history.replaceState(null, "", url.toString());
+      }
       // se la pending è stata approvata (ora appare in lista), rimuovila
       if (pending && data.items.some(i => i.id === pending.id)) {
         setPending(null);
@@ -94,7 +111,10 @@ export default function ReviewsPage() {
     }
   };
 
-  useEffect(() => { fetchList(1); }, []);
+  // rimuovi la fetch iniziale duplicata
+  // useEffect(() => { fetchList(1); }, []);
+  // useEffect iniziale gestita sopra leggendo l'URL
+  // useEffect(() => { fetchList(1); }, []);
 
   const totalPages = useMemo(() => Math.max(1, Math.ceil(pagination.total / pagination.take)), [pagination]);
 
@@ -183,7 +203,7 @@ export default function ReviewsPage() {
         )}
       </div>
 
-      <form id="lascia" onSubmit={submit} className="card p-4 space-y-4">
+      <form id="lascia" onSubmit={submit} className="card p-4 space-y-4 scroll-mt-20 sm:scroll-mt-24">
         <div className="space-y-1">
           <label className="text-sm font-medium">Nome</label>
           <input
