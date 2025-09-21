@@ -23,7 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 <form
                   action={async () => {
                     "use server";
-                    cookies().set("rv_session", "", { maxAge: 0, path: "/" });
+                    (await cookies()).set("rv_session", "", { maxAge: 0, path: "/" });
                     // No redirect here; the page will become unauthorized and middleware will handle navigation on next request
                   }}
                   className="ml-auto shrink-0"
