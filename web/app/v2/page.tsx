@@ -400,11 +400,11 @@ export default async function HomeV2() {
               </div>
              </div>
           <div className="rounded-2xl border glass p-6 shadow-soft transform-gpu transition-transform duration-200 ease-out motion-safe:hover:-translate-y-1 motion-safe:focus-within:-translate-y-1 hover:shadow-md">
-             <h3 className="font-medium">Contatti & orari</h3>
-             <ul className="mt-3 space-y-2 text-sm text-black/70 dark:text-white/70">
-               <li>Lun–Gio: 19:30–23:00</li>
-               <li>Ven–Sab: 19:30–00:00</li>
-               <li>Dom: chiuso</li>
+             <h3 className="font-medium text-[#0F1B2A]">Contatti & orari</h3>
+             <ul className="mt-3 space-y-2 text-sm text-[#0F1B2A]">
+               <li>Lun–Gio: 19:00–23:00</li>
+               <li>Ven–Sab: 19:00–00:00</li>
+               <li>Dom: anche a pranzo</li>
                <li className="pt-2">
                  <a href={`tel:${CONTACT_INFO.phone}`} className="hover:underline">{CONTACT_INFO.phone}</a>
                  {" "}·{" "}

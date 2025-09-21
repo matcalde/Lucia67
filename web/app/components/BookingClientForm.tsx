@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { AvailabilityCalendar } from "@/app/components/AvailabilityCalendar";
-import { TIME_SLOTS } from "@/lib/constants";
+import { getTimeSlotsForDate } from "@/lib/constants";
 
 const schema = z.object({
   date: z.string().min(1, "Seleziona una data"),
@@ -25,6 +25,7 @@ export type BookingFormValues = z.infer<typeof schema>;
 export function BookingClientForm({ disabledDates, confirmedDates = [], pendingDates = [] }: { disabledDates: string[]; confirmedDates?: string[]; pendingDates?: string[] }) {
   const [submitting, setSubmitting] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const timeSlots = useMemo(() => getTimeSlotsForDate(selectedDate), [selectedDate]);
   const {
     register,
     handleSubmit,
@@ -97,7 +98,7 @@ export function BookingClientForm({ disabledDates, confirmedDates = [], pendingD
             <label className="block text-sm mb-1">Orario indicativo</label>
             <select className="w-full rounded border px-3 py-2" {...register("time")} disabled={!selectedDate}>
               <option value="">Seleziona orario</option>
-              {TIME_SLOTS.map((t) => (
+              {timeSlots.map((t) => (
                 <option key={t} value={t}>{`ore ${t}`}</option>
               ))}
             </select>

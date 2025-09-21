@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { z } from "zod";
 import { AvailabilityCalendar } from "@/app/components/AvailabilityCalendar";
 import { BookingCreateSchema } from "@/lib/schemas";
-import { TIME_SLOTS } from "@/lib/constants";
+import { getTimeSlotsForDate } from "@/lib/constants";
 
 export type BookingStepperProps = {
   disabledDates: string[];
@@ -48,6 +48,7 @@ export default function BookingStepper({ disabledDates, confirmedDates = [], pen
   });
 
   const disabledSet = useMemo(() => new Set(disabledDates), [disabledDates]);
+  const timeSlots = useMemo(() => getTimeSlotsForDate(draft.date), [draft.date]);
 
   function nextFromStep1() {
     setError(null);
@@ -172,7 +173,7 @@ export default function BookingStepper({ disabledDates, confirmedDates = [], pen
                 disabled={!draft.date}
               >
                 <option value="">Seleziona orario</option>
-                {TIME_SLOTS.map((t) => (
+                {timeSlots.map((t) => (
                   <option key={t} value={t}>{`ore ${t}`}</option>
                 ))}
               </select>

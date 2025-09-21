@@ -27,6 +27,27 @@ export const TIME_SLOTS: string[] = [
   "22:00",
 ];
 
+export const TIME_SLOTS_LUNCH: string[] = [
+  "12:00",
+  "12:30",
+  "13:00",
+  "13:30",
+  "14:00",
+];
+
+export function getTimeSlotsForDate(dateISO?: string | null): string[] {
+  const dinner = TIME_SLOTS;
+  if (!dateISO) return dinner;
+  // Evita problemi di timezone usando il costruttore locale (Y, M-1, D)
+  try {
+    const [y, m, d] = dateISO.split("-").map(Number);
+    const dow = new Date(y, (m || 1) - 1, d || 1).getDay();
+    const isSunday = dow === 0;
+    return isSunday ? [...TIME_SLOTS_LUNCH, ...dinner] : dinner;
+  } catch {
+    return dinner;
+  }
+}
 
 // Categorie galleria
 export const GALLERY_CATEGORY = {

@@ -217,23 +217,23 @@ export function AvailabilityCalendar({
 
       {/* Legenda premium */}
       <div className="mt-4 p-3 bg-black/5 dark:bg-white/5 rounded-lg">
-        <div className="text-xs font-medium text-black/70 dark:text-white/70 mb-2">Legenda:</div>
+        <div className="text-xs font-medium text-[#0F1B2A] mb-2">Legenda:</div>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="flex items-center gap-2">
             <span className="inline-block w-3 h-3 rounded border bg-green-100 border-green-300" />
-            <span className="text-black/70 dark:text-white/70">Confermata</span>
+            <span className="text-[#0F1B2A]">Confermata</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="inline-block w-3 h-3 rounded border bg-yellow-100 border-yellow-300" />
-            <span className="text-black/70 dark:text-white/70">In conferma</span>
+            <span className="text-[#0F1B2A]">In conferma</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="inline-block w-3 h-3 rounded border" />
-            <span className="text-black/70 dark:text-white/70">Disponibile</span>
+            <span className="text-[#0F1B2A]">Disponibile</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="inline-block w-3 h-3 rounded border bg-red-50 border-red-200" />
-            <span className="text-black/70 dark:text-white/70">Non disponibile</span>
+            <span className="text-[#0F1B2A]">Non disponibile</span>
           </div>
         </div>
       </div>
