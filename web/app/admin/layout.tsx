@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
+import { logout } from "@/app/actions";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const hasSession = (await cookies()).get("rv_session")?.value;
@@ -20,14 +21,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 <Link href="/admin/reviews" className="shrink-0">Recensioni</Link>
                 <Link href="/admin/menu/sections" className="shrink-0">Menu · Sezioni</Link>
                 <Link href="/admin/menu/items" className="shrink-0">Menu · Piatti</Link>
-                <form
-                  action={async () => {
-                    "use server";
-                    (await cookies()).set("rv_session", "", { maxAge: 0, path: "/" });
-                    // No redirect here; the page will become unauthorized and middleware will handle navigation on next request
-                  }}
-                  className="ml-auto shrink-0"
-                >
+                <form action={logout} className="ml-auto shrink-0">
                   <button className="text-sm text-red-600 hover:underline">Logout</button>
                 </form>
               </>

@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
 
 
 export async function getDisabledDates(): Promise<string[]> {
@@ -39,4 +40,9 @@ export async function getAnnouncements() {
     orderBy: [{ eventDate: "desc" }, { createdAt: "desc" }],
     select: { id: true, title: true, content: true, isActive: true, eventDate: true, createdAt: true, imageUrl: true },
   });
+}
+
+export async function logout() {
+  // Server action centralizzata per reset sessione admin
+  (await cookies()).set("rv_session", "", { maxAge: 0, path: "/" });
 }
